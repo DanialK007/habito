@@ -12,6 +12,7 @@ export interface Habit {
   icon?: string;
   deleted?: boolean; // Soft delete flag for trash
   deletedAt?: Date; // When it was moved to trash
+  favorite?: boolean; // Favorite flag for favorites
 }
 
 export interface HabitFormData {
@@ -22,6 +23,7 @@ export interface HabitFormData {
   startDate: Date;
   color?: string;
   icon?: string;
+  favorite?: boolean;
 }
 
 export interface HabitStats {

@@ -18,6 +18,15 @@ import {
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 export default function Sidebar() {
   const { user, signOut } = useAuth();
@@ -26,6 +35,8 @@ export default function Sidebar() {
     habits: true,
   });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
 
   const toggleSection = (section: string) => {
     setExpandedSections(prev => ({
@@ -34,13 +45,23 @@ export default function Sidebar() {
     }));
   };
 
-  const handleSignOut = async () => {
+  const handleSignOutClick = () => {
+    setLogoutDialogOpen(true);
+  };
+
+  const confirmSignOut = async () => {
+    setIsSigningOut(true);
     try {
       await signOut();
       window.location.href = '/';
     } catch (error) {
       console.error('Error signing out:', error);
+      setIsSigningOut(false);
     }
+  };
+
+  const cancelSignOut = () => {
+    setLogoutDialogOpen(false);
   };
 
   const isActive = (path: string) => pathname === path;
@@ -65,7 +86,7 @@ export default function Sidebar() {
 
       {/* Sidebar */}
       <aside className={`
-        fixed lg:static left-0 top-0 h-screen bg-stone-50 border-r border-stone-200 
+        fixed lg:sticky left-0 top-0 h-screen bg-stone-50 border-r border-stone-200 
         flex flex-col z-50 transition-transform duration-300 ease-in-out
         ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         w-60
@@ -190,7 +211,7 @@ export default function Sidebar() {
               {user?.displayName || 'User'}
             </span>
             <button
-              onClick={handleSignOut}
+              onClick={handleSignOutClick}
               className="p-1 hover:bg-stone-200 rounded"
               title="Sign out"
             >
@@ -199,6 +220,30 @@ export default function Sidebar() {
           </div>
         </div>
       </aside>
+
+      {/* Logout Confirmation Dialog */}
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Sign Out</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to sign out? You'll need to sign in again to access your habits.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="ghost" onClick={cancelSignOut}>
+              Cancel
+            </Button>
+            <Button 
+              variant="destructive" 
+              onClick={confirmSignOut}
+              disabled={isSigningOut}
+            >
+              {isSigningOut ? "Signing out..." : "Sign Out"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

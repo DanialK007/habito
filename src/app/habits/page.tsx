@@ -54,6 +54,12 @@ export default function HabitsPage() {
     setHabits(habits.map(h => h.id === updatedHabit.id ? updatedHabit : h));
   };
 
+  const handleFavoriteToggled = (habitId: string, isFavorite: boolean) => {
+    // If a habit is unfavorited and we're on the habits page, keep it in the list
+    // If a habit is favorited, also keep it in the list
+    // The habits page shows all habits regardless of favorite status
+  };
+
   if (loading || loadingHabits) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-stone-50">
@@ -116,6 +122,7 @@ export default function HabitsPage() {
                 habits={habits}
                 onHabitDeleted={handleHabitDeleted}
                 onHabitUpdated={handleHabitUpdated}
+                onFavoriteToggled={handleFavoriteToggled}
               />
             </>
           )}

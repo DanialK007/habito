@@ -34,6 +34,7 @@ const convertToHabit = (doc: DocumentData): Habit => {
     icon: data.icon,
     deleted: data.deleted || false,
     deletedAt: data.deletedAt?.toDate() || null,
+    favorite: data.favorite || false,
   };
 };
 
@@ -46,6 +47,7 @@ export const createHabit = async (userId: string, habitData: HabitFormData): Pro
     createdAt: Timestamp.now(),
     completedDates: [],
     deleted: false,
+    favorite: false,
   });
   
   const docSnap = await getDoc(docRef);
@@ -80,6 +82,30 @@ export const getDeletedHabits = async (userId: string): Promise<Habit[]> => {
   return querySnapshot.docs
     .map(convertToHabit)
     .sort((a, b) => (b.deletedAt?.getTime() || 0) - (a.deletedAt?.getTime() || 0));
+};
+
+// Get favorite habits
+export const getFavoriteHabits = async (userId: string): Promise<Habit[]> => {
+  const q = query(
+    collection(db, HABITS_COLLECTION),
+    where('userId', '==', userId),
+    where('deleted', '==', false),
+    where('favorite', '==', true)
+  );
+  
+  const querySnapshot = await getDocs(q);
+  // Sort locally by createdAt desc
+  return querySnapshot.docs
+    .map(convertToHabit)
+    .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime());
+};
+
+// Toggle favorite status
+export const toggleFavorite = async (habitId: string, isFavorite: boolean): Promise<void> => {
+  const docRef = doc(db, HABITS_COLLECTION, habitId);
+  await updateDoc(docRef, {
+    favorite: isFavorite
+  });
 };
 
 // Get a single habit by ID

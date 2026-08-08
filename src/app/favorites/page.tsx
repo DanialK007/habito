@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/context/AuthContext';
 import { Habit } from '@/types/habit';
-import { getUserHabits } from '@/lib/firebase/habits';
+import { getFavoriteHabits } from '@/lib/firebase/habits';
 import Sidebar from '@/components/Sidebar';
 import HabitList from '@/components/HabitList';
 import { Star } from 'lucide-react';
@@ -25,11 +25,10 @@ export default function FavoritesPage() {
     const fetchHabits = async () => {
       if (user) {
         try {
-          const userHabits = await getUserHabits(user.uid);
-          // Filter for favorites (we'd need to add a favorite field to the habit schema)
-          setHabits(userHabits);
+          const favoriteHabits = await getFavoriteHabits(user.uid);
+          setHabits(favoriteHabits);
         } catch (error) {
-          console.error('Error fetching habits:', error);
+          console.error('Error fetching favorite habits:', error);
         } finally {
           setLoadingHabits(false);
         }
@@ -45,6 +44,13 @@ export default function FavoritesPage() {
 
   const handleHabitUpdated = (updatedHabit: Habit) => {
     setHabits(habits.map(h => h.id === updatedHabit.id ? updatedHabit : h));
+  };
+
+  const handleFavoriteToggled = (habitId: string, isFavorite: boolean) => {
+    // If a habit is unfavorited, remove it from the favorites list
+    if (!isFavorite) {
+      setHabits(habits.filter(h => h.id !== habitId));
+    }
   };
 
   if (loading || loadingHabits) {
@@ -92,6 +98,7 @@ export default function FavoritesPage() {
               habits={habits}
               onHabitDeleted={handleHabitDeleted}
               onHabitUpdated={handleHabitUpdated}
+              onFavoriteToggled={handleFavoriteToggled}
             />
           )}
         </div>

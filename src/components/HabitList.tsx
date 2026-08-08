@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Habit } from "@/types/habit";
 import { getHabitStats, getCompletionData } from "@/lib/habitAnalytics";
-import { toggleHabitCompletion, softDeleteHabit } from "@/lib/firebase/habits";
+import { toggleHabitCompletion, softDeleteHabit, toggleFavorite } from "@/lib/firebase/habits";
 import {
   Flame,
   Trash2,
@@ -14,8 +14,10 @@ import {
   ChevronUp,
   ChevronLeft,
   ChevronRight,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import StreakHeatmap from "@/components/StreakHeatmap";
 import {
   Dialog,
   DialogContent,
@@ -29,12 +31,14 @@ interface HabitListProps {
   habits: Habit[];
   onHabitDeleted: (habitId: string) => void;
   onHabitUpdated: (habit: Habit) => void;
+  onFavoriteToggled?: (habitId: string, isFavorite: boolean) => void;
 }
 
 export default function HabitList({
   habits,
   onHabitDeleted,
   onHabitUpdated,
+  onFavoriteToggled,
 }: HabitListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [expandedHabits, setExpandedHabits] = useState<Record<string, boolean>>(
@@ -45,6 +49,7 @@ export default function HabitList({
   );
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [habitToDelete, setHabitToDelete] = useState<Habit | null>(null);
+  const [favoritingId, setFavoritingId] = useState<string | null>(null);
 
   const toggleHabitExpansion = (habitId: string) => {
     setExpandedHabits((prev) => ({
@@ -97,6 +102,22 @@ export default function HabitList({
   const cancelDelete = () => {
     setDeleteDialogOpen(false);
     setHabitToDelete(null);
+  };
+
+  const handleToggleFavorite = async (habit: Habit) => {
+    setFavoritingId(habit.id);
+    try {
+      const newFavoriteStatus = !habit.favorite;
+      await toggleFavorite(habit.id, newFavoriteStatus);
+      onHabitUpdated({ ...habit, favorite: newFavoriteStatus });
+      if (onFavoriteToggled) {
+        onFavoriteToggled(habit.id, newFavoriteStatus);
+      }
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    } finally {
+      setFavoritingId(null);
+    }
   };
 
   const isCompletedToday = (habit: Habit) => {
@@ -244,8 +265,8 @@ export default function HabitList({
 
                 {/* Meta info */}
                 <div className="flex items-center gap-3 sm:gap-4 mt-1">
-                  <div className="flex items-center gap-1 text-xs text-stone-400">
-                    <Flame className="w-3 h-3" />
+                  <div className={`flex items-center gap-1 text-xs ${completedToday ? 'text-red-400 font-bold' : 'text-stone-400'}`}>
+                    <Flame className={`w-3 h-3 ${completedToday ? 'fill-red-400 text-red-400' : ''}`} />
                     <span className="hidden sm:inline">
                       {stats.currentStreak} day streak
                     </span>
@@ -266,6 +287,15 @@ export default function HabitList({
                 <Button
                   variant="ghost"
                   size="sm"
+                  onClick={() => handleToggleFavorite(habit)}
+                  disabled={favoritingId === habit.id}
+                  className={`h-7 w-7 p-0 ${habit.favorite ? 'text-red-500 hover:text-red-600' : 'text-stone-400 hover:text-red-500'}`}
+                >
+                  <Heart className={`w-4 h-4 ${habit.favorite ? 'fill-red-500' : ''}`} />
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
                   onClick={() => handleDeleteClick(habit)}
                   disabled={deletingId === habit.id}
                   className="h-7 w-7 p-0 text-stone-400 hover:text-red-500"
@@ -278,112 +308,10 @@ export default function HabitList({
             {/* Calendar Section */}
             {isExpanded && (
               <div className="border-t border-stone-200 p-3 sm:p-4 bg-stone-50">
-                <div className="max-w-44">
-                  {/* Month Header */}
-                  <div className="flex items-center justify-between mb-4">
-                    <button
-                      onClick={() =>
-                        setCalendarMonths((prev) => ({
-                          ...prev,
-                          [habit.id]: new Date(
-                            currentMonth.getFullYear(),
-                            currentMonth.getMonth() - 1,
-                            1,
-                          ),
-                        }))
-                      }
-                      className="p-1 hover:bg-stone-200 rounded"
-                    >
-                      <ChevronLeft className="w-4 h-4 text-stone-400" />
-                    </button>
-                    <span className="text-sm font-medium text-stone-700">
-                      {currentMonth.toLocaleString("default", {
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </span>
-                    <button
-                      onClick={() =>
-                        setCalendarMonths((prev) => ({
-                          ...prev,
-                          [habit.id]: new Date(
-                            currentMonth.getFullYear(),
-                            currentMonth.getMonth() + 1,
-                            1,
-                          ),
-                        }))
-                      }
-                      className="p-1 hover:bg-stone-200 rounded"
-                    >
-                      <ChevronRight className="w-4 h-4 text-stone-400" />
-                    </button>
-                  </div>
-
-                  {/* Weekday headers */}
-                  <div className="grid grid-cols-7 gap-1 mb-2">
-                    {["S", "M", "T", "W", "T", "F", "S"].map((day, index) => (
-                      <div
-                        key={index}
-                        className="text-xs text-center text-stone-400 font-medium"
-                      >
-                        {day}
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Calendar grid */}
-                  <div className="grid grid-cols-7 gap-1">
-                    {generateCalendarGrid().map((day, index) => {
-                      if (!day) {
-                        return <div key={index} className="aspect-square" />;
-                      }
-
-                      const today = new Date();
-                      const isToday =
-                        day.date.toDateString() === today.toDateString();
-                      const isCompleted = day.completed;
-                      const shouldTrack = day.shouldTrack;
-
-                      // Don't track days before start date or not in custom schedule
-                      if (!shouldTrack) {
-                        return (
-                          <div
-                            key={index}
-                            className="aspect-square rounded-sm flex items-center justify-center text-xs font-medium text-stone-300"
-                          >
-                            {day.date.getDate()}
-                          </div>
-                        );
-                      }
-
-                      return (
-                        <div
-                          key={index}
-                          className={`
-                            aspect-square rounded-sm flex items-center justify-center text-xs font-medium cursor-pointer transition-all
-                            ${isToday ? "ring-2 ring-blue-500 ring-offset-1" : ""}
-                            ${isCompleted ? getIntensity(true) : getIntensity(false)}
-                            ${isCompleted ? "text-white" : "text-stone-600"}
-                          `}
-                          title={day.date.toLocaleDateString()}
-                        >
-                          {day.date.getDate()}
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-                {/* Legend */}
-                <div className="flex items-center justify-start gap-4 mt-4 text-xs text-stone-400">
-                  <div className="flex items-center gap-1">
-                    <div className="w-4 h-4 rounded-sm bg-stone-100" />
-                    <span>Not completed</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <div className="w-4 h-4 rounded-sm bg-green-500" />
-                    <span>Completed</span>
-                  </div>
-                </div>
+                <h4 className="text-xs font-medium text-stone-500 mb-3 uppercase tracking-wide">
+                  Contribution Activity
+                </h4>
+                <StreakHeatmap habit={habit} days={90} />
               </div>
             )}
           </div>
