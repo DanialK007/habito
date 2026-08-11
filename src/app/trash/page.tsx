@@ -50,7 +50,8 @@ export default function TrashPage() {
     try {
       const userId = isFirebaseUser && user ? (user as any).uid : undefined;
       await restoreHybridHabit(habitId, userId);
-      setHabits(habits.filter(h => h.id !== habitId));
+      // Refresh the habits list after restore
+      await fetchHabits();
     } catch (error) {
       console.error('Error restoring habit:', error);
     } finally {
@@ -70,7 +71,8 @@ export default function TrashPage() {
     try {
       const userId = isFirebaseUser && user ? (user as any).uid : undefined;
       await deleteHybridHabit(habitToDelete.id, userId);
-      setHabits(habits.filter(h => h.id !== habitToDelete.id));
+      // Refresh the habits list after permanent delete
+      await fetchHabits();
       setDeleteDialogOpen(false);
       setHabitToDelete(null);
     } catch (error) {

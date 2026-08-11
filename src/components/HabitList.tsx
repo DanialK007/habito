@@ -91,6 +91,7 @@ export default function HabitList({
     setDeletingId(habitToDelete.id);
     try {
       await softDeleteHybridHabit(habitToDelete.id, userId);
+      // Call the parent to refresh the habit list
       onHabitDeleted(habitToDelete.id);
       setDeleteDialogOpen(false);
       setHabitToDelete(null);

@@ -37,7 +37,7 @@ export default function MobileBottomNav() {
   if (pathname === "/") return null;
 
   return (
-    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
+    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
       <div className="bg-neutral-50/60 backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
         <div className="flex items-center justify-around px-2 py-2 relative">
           {/* Sliding indicator */}
