@@ -65,20 +65,22 @@ export default function Sidebar() {
 
   return (
     <div className='h-screen p-2 hidden md:block md:sticky md:top-0 md:z-50'>
-      <aside className="h-full bg-white border border-gray-200 rounded-3xl flex flex-col w-60">
+      <aside className="h-full bg-linear-to-br to-orange-50 border border-neutral-200 rounded-3xl flex flex-col w-60">
         {/* Workspace Header */}
-        <div className="p-4 border-b border-gray-200">
-          <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded-full cursor-pointer transition-colors">
-            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm">
-              H
-            </div>
+        <div className="p-4 border-b border-neutral-200">
+          <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1.5 hover:bg-neutral-50 rounded-full cursor-pointer transition-colors">
+            <img 
+              src="/logo.png" 
+              alt="Habito" 
+              className="w-8 h-8 rounded-full object-cover"
+            />
             <span className="text-sm font-semibold text-gray-900">Habito</span>
           </Link>
         </div>
 
         {/* Search */}
         <div className="p-3">
-          <button className="w-full flex items-center gap-2 px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-full text-sm transition-colors border border-transparent hover:border-gray-200">
+          <button className="w-full flex items-center gap-2 px-4 py-2 text-gray-500 hover:bg-neutral-50 rounded-full text-sm transition-colors border border-transparent hover:border-neutral-200">
             <Search className="w-4 h-4" />
             <span>Search</span>
           </button>
@@ -89,8 +91,8 @@ export default function Sidebar() {
           <nav className="space-y-1">
             <Link 
               href="/dashboard"
-              className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors border border-transparent ${
-                isActive('/dashboard') ? 'bg-gray-100' : 'text-gray-900 hover:bg-gray-50 hover:border-gray-200'
+              className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
+                isActive('/dashboard') ? 'bg-neutral-100 text-orange-500 font-semibold' : 'text-gray-900 hover:bg-neutral-50 hover:border-neutral-200'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -101,7 +103,7 @@ export default function Sidebar() {
             <div>
               <button
                 onClick={() => toggleSection('habits')}
-                className="w-full flex items-center justify-between px-4 py-2 text-gray-900 hover:bg-gray-50 rounded-full text-sm transition-colors border border-transparent hover:border-gray-200"
+                className="w-full flex items-center justify-between px-4 py-2 text-gray-900 hover:bg-neutral-50 rounded-full text-sm transition-colors border border-transparent hover:border-neutral-200"
               >
                 <div className="flex items-center gap-2">
                   {expandedSections.habits ? (
@@ -119,7 +121,7 @@ export default function Sidebar() {
                   <Link 
                     href="/habits"
                     className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
-                      isActive('/habits') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
+                      isActive('/habits') ? 'bg-neutral-100 text-orange-500 font-semibold' : 'text-gray-500 hover:bg-neutral-50 hover:border-neutral-200'
                     }`}
                   >
                     <Calendar className="w-4 h-4" />
@@ -128,7 +130,7 @@ export default function Sidebar() {
                   <Link 
                     href="/favorites"
                     className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
-                      isActive('/favorites') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
+                      isActive('/favorites') ? 'bg-neutral-100 text-orange-500 font-semibold' : 'text-gray-500 hover:bg-neutral-50 hover:border-neutral-200'
                     }`}
                   >
                     <Star className="w-4 h-4" />
@@ -137,7 +139,7 @@ export default function Sidebar() {
                   <Link 
                     href="/trash"
                     className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
-                      isActive('/trash') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
+                      isActive('/trash') ? 'bg-neutral-100 text-orange-500 font-semibold' : 'text-gray-500 hover:bg-neutral-50 hover:border-neutral-200'
                     }`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -150,7 +152,7 @@ export default function Sidebar() {
             <Link 
               href="/settings"
               className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
-                isActive('/settings') ? 'bg-gray-100' : 'text-gray-900 hover:bg-gray-50 hover:border-gray-200'
+                isActive('/settings') ? 'bg-neutral-100 text-orange-500 font-semibold' : 'text-gray-900 hover:bg-neutral-50 hover:border-neutral-200'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -160,7 +162,7 @@ export default function Sidebar() {
         </div>
 
         {/* User Section */}
-        <div className="p-3 border-t border-gray-200">
+        <div className="p-3 border-t border-neutral-200">
           <div className="flex items-center gap-2 px-2 py-2">
             {(user as any)?.photoURL && (
               <img
@@ -174,7 +176,7 @@ export default function Sidebar() {
             </span>
             <button
               onClick={handleSignOutClick}
-              className="p-1.5 hover:bg-gray-100 rounded-2xl transition-colors"
+              className="p-2 hover:bg-neutral-100 rounded-lg transition-colors"
               title={isFirebaseUser ? "Sign out" : "Reset data"}
             >
               <LogOut className="w-4 h-4 text-gray-400" />
@@ -185,7 +187,7 @@ export default function Sidebar() {
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <DialogContent className="rounded-2xl bg-gray-50 min-w-72">
+        <DialogContent className="rounded-2xl bg-neutral-50 min-w-72">
           <DialogHeader>
             <DialogTitle className="text-gray-800">{isFirebaseUser ? 'Sign Out' : 'Reset Data'}</DialogTitle>
             <DialogDescription className="text-gray-500">
@@ -195,7 +197,7 @@ export default function Sidebar() {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={cancelSignOut} className="rounded-2xl bg-gray-200 hover:bg-gray-300 text-gray-600 hover:text-gray-800">
+            <Button variant="ghost" onClick={cancelSignOut} className="rounded-2xl bg-neutral-200 hover:bg-neutral-300 text-gray-600 hover:text-gray-800">
               Cancel
             </Button>
             <Button 

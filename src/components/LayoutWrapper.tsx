@@ -13,7 +13,7 @@ export default function LayoutWrapper({ children }: { children: React.ReactNode 
   }
 
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen bg-neutral-100">
       <Sidebar />
       <main className="pt-4 flex-1 lg:pt-0">
         <div className="pb-16 lg:pb-0">

@@ -39,9 +39,11 @@ export default function Home() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-stone-900 rounded-2xl flex items-center justify-center">
-                <Target className="w-5 h-5 text-white" />
-              </div>
+              <img 
+                src="/logo.png" 
+                alt="Habito" 
+                className="w-8 h-8 rounded-2xl object-cover"
+              />
               <span className="text-xl font-semibold text-stone-900">Habito</span>
             </div>
             <Button 

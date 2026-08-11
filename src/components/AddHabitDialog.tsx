@@ -86,7 +86,7 @@ export default function AddHabitDialog({ open, onOpenChange, onHabitAdded, userI
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="sm:max-w-106.25">
         <DialogHeader>
           <DialogTitle>Create New Habit</DialogTitle>
           <DialogDescription>
@@ -165,10 +165,10 @@ export default function AddHabitDialog({ open, onOpenChange, onHabitAdded, userI
             </div>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto">
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)} className="w-full sm:w-auto rounded-full me-auto">
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting || !formData.title} className="w-full sm:w-auto">
+            <Button type="submit" disabled={isSubmitting || !formData.title} className="w-full sm:w-auto rounded-full">
               {isSubmitting ? 'Creating...' : 'Create Habit'}
             </Button>
           </DialogFooter>

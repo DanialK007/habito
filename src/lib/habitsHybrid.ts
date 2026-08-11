@@ -102,23 +102,30 @@ export const createHabit = async (habitData: any, userId?: string): Promise<Habi
 
 // Toggle habit completion - tries Firebase first, falls back to local storage
 export const toggleHabitCompletion = async (habitId: string, date: Date, userId?: string): Promise<Habit> => {
+  console.log('Toggle completion called for habit:', habitId, 'userId:', userId);
   try {
     if (userId) {
       try {
         // Try Firebase first
         const { toggleHabitCompletion: toggleFirebaseCompletion } = await import('@/lib/firebase/habits');
+        console.log('Attempting Firebase toggle');
         await toggleFirebaseCompletion(habitId, date);
+        console.log('Firebase toggle successful');
         // Also update local storage
         await toggleLocalHabitCompletion(habitId, date.toISOString().split('T')[0]);
+        console.log('Local storage toggle successful');
         // Fetch the updated habit from local storage
         const updatedHabit = await getLocalHabitById(habitId);
         if (updatedHabit) return updatedHabit;
       } catch (firebaseError) {
-        console.log('Firebase not available, using local storage');
+        console.log('Firebase not available, using local storage:', firebaseError);
       }
+    } else {
+      console.log('No userId provided, using local storage directly');
     }
     
     // Fall back to local storage
+    console.log('Attempting local storage toggle');
     return await toggleLocalHabitCompletion(habitId, date.toISOString().split('T')[0]);
   } catch (error) {
     console.error('Error toggling habit completion:', error);

@@ -38,7 +38,7 @@ export default function MobileBottomNav() {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
-      <div className="bg-neutral-50/60 backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
+      <div className="bg-neutral-50/75 backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
         <div className="flex items-center justify-around px-2 py-2 relative">
           {/* Sliding indicator */}
           <div
@@ -56,8 +56,8 @@ export default function MobileBottomNav() {
                 ref={(el) => { navRefs.current[index] = el; }}
                 className={`flex flex-col w-20 h-14 justify-center items-center gap-1 rounded-full transition-colors ${
                   isActive
-                    ? "text-blue-600"
-                    : "text-gray-500 hover:bg-gray-50"
+                    ? "text-orange-500"
+                    : "text-gray-500 hover:text-orange-500"
                 }`}
               >
                 <item.icon className="w-5 h-5" />

@@ -9,8 +9,8 @@ interface StreakHeatmapProps {
 
 export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) {
   const getIntensity = (completed: boolean) => {
-    if (!completed) return 'bg-stone-200';
-    return 'bg-green-500';
+    if (!completed) return 'bg-neutral-200 hover:border hover:border-neutral-500';
+    return 'bg-orange-500 hover:border hover:border-neutral-500';
   };
 
   // Generate full 90-day grid going backwards from today
@@ -79,7 +79,7 @@ export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) 
             <div key={weekIndex} className="flex flex-col gap-1">
               {week.map((day, dayIndex) => {
                 if (!day) {
-                  return <div key={dayIndex} className="w-3 h-3 rounded-sm bg-stone-100" />;
+                  return <div key={dayIndex} className="w-3 h-3 rounded-sm bg-neutral-100" />;
                 }
 
                 const isCompleted = day.completed;
@@ -90,7 +90,7 @@ export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) 
                     key={dayIndex}
                     className={`
                       w-3 h-3 rounded-sm ${getIntensity(isCompleted)}
-                      ${isToday ? 'ring-1 ring-stone-400' : ''}
+                      ${isToday ? 'ring-1 ring-neutral-600' : ''}
                     `}
                     title={`${day.date.toLocaleDateString()}: ${isCompleted ? 'Completed' : 'Not completed'}`}
                   />
@@ -102,10 +102,10 @@ export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) 
       </div>
 
       {/* Legend */}
-      <div className="flex items-center gap-2 mt-3 text-xs text-stone-400">
+      <div className="flex items-center gap-2 mt-3 text-xs text-neutral-400">
         <span>Less</span>
-        <div className="w-3 h-3 rounded-sm bg-stone-200" />
-        <div className="w-3 h-3 rounded-sm bg-green-500" />
+        <div className="w-3 h-3 rounded-sm bg-neutral-200" />
+        <div className="w-3 h-3 rounded-sm bg-orange-500" />
         <span>More</span>
       </div>
     </div>

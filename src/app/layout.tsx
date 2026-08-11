@@ -24,6 +24,9 @@ export default function RootLayout({
       lang="en"
       className={`${inter.variable} antialiased`}
     >
+      <head>
+        <link rel="icon" href="/logo.png" />
+      </head>
       <body className="min-h-screen">
         <AuthProvider>
           <LayoutWrapper>{children}</LayoutWrapper>
