@@ -13,6 +13,7 @@ export const getLocalHabits = async (): Promise<Habit[]> => {
   try {
     await localStorageService.init();
     const habits = await localStorageService.getHabits();
+    console.log('Local habits from storage:', habits);
     // Convert any string dates to Date objects for consistency
     return habits.map(habit => ({
       ...habit,
@@ -186,6 +187,7 @@ export const getLocalDeletedHabits = async (): Promise<Habit[]> => {
   try {
     await localStorageService.init();
     const habits = await localStorageService.getDeletedHabits();
+    console.log('Local deleted habits from storage:', habits);
     // Convert to app format
     return habits.map(habit => ({
       ...habit,

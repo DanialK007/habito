@@ -51,7 +51,7 @@ export const getHabits = async (userId?: string): Promise<Habit[]> => {
         // Sync to local storage for offline use
         await syncFirebaseToLocal(firebaseHabits);
         // Filter and normalize habits
-        return firebaseHabits.filter(habit => habit && habit.id).map(habit => ({
+        return firebaseHabits.filter(habit => habit && habit.id && !habit.deleted).map(habit => ({
           ...habit,
           // Ensure completedDates is always an array
           completedDates: habit.completedDates || [],
@@ -65,7 +65,7 @@ export const getHabits = async (userId?: string): Promise<Habit[]> => {
     
     // Fall back to local storage
     const localHabits = await getLocalHabits();
-    return localHabits.filter(habit => habit && habit.id).map(habit => ({
+    return localHabits.filter(habit => habit && habit.id && !habit.deleted).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
       title: habit.title || 'Habit',
@@ -135,19 +135,26 @@ export const softDeleteHabit = async (habitId: string, userId?: string): Promise
         // Try Firebase first
         const { softDeleteHabit: softDeleteFirebaseHabit } = await import('@/lib/firebase/habits');
         await softDeleteFirebaseHabit(habitId);
-        // Also update local storage
+        // Also update local storage after Firebase succeeds
         await softDeleteLocalHabit(habitId);
+        console.log('Habit soft deleted in Firebase and local storage');
         return;
       } catch (firebaseError) {
-        console.log('Firebase not available, using local storage');
+        console.log('Firebase not available, using local storage only');
       }
     }
     
-    // Fall back to local storage
+    // Fall back to local storage only
     await softDeleteLocalHabit(habitId);
+    console.log('Habit soft deleted in local storage only');
   } catch (error) {
     console.error('Error soft deleting habit:', error);
-    await softDeleteLocalHabit(habitId);
+    // Try local storage as final fallback
+    try {
+      await softDeleteLocalHabit(habitId);
+    } catch (localError) {
+      console.error('Local storage fallback also failed:', localError);
+    }
   }
 };
 
@@ -231,10 +238,11 @@ export const getDeletedHabits = async (userId?: string): Promise<Habit[]> => {
         // Try Firebase first
         const { getDeletedHabits: getFirebaseDeletedHabits } = await import('@/lib/firebase/habits');
         const firebaseDeleted = await getFirebaseDeletedHabits(userId);
+        console.log('Firebase deleted habits:', firebaseDeleted);
         // Sync to local storage
         await syncFirebaseToLocal(firebaseDeleted);
         // Filter and normalize habits
-        return firebaseDeleted.filter(habit => habit && habit.id).map(habit => ({
+        return firebaseDeleted.filter(habit => habit && habit.id && habit.deleted).map(habit => ({
           ...habit,
           completedDates: habit.completedDates || [],
           title: habit.title || 'Habit',
@@ -246,7 +254,8 @@ export const getDeletedHabits = async (userId?: string): Promise<Habit[]> => {
     
     // Fall back to local storage
     const localDeleted = await getLocalDeletedHabits();
-    return localDeleted.filter(habit => habit && habit.id).map(habit => ({
+    console.log('Local deleted habits:', localDeleted);
+    return localDeleted.filter(habit => habit && habit.id && habit.deleted).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
       title: habit.title || 'Habit',
@@ -266,7 +275,7 @@ export const getFavoriteHabits = async (userId?: string): Promise<Habit[]> => {
         const { getFavoriteHabits: getFirebaseFavoriteHabits } = await import('@/lib/firebase/habits');
         const firebaseFavorites = await getFirebaseFavoriteHabits(userId);
         // Filter and normalize habits
-        return firebaseFavorites.filter(habit => habit && habit.id).map(habit => ({
+        return firebaseFavorites.filter(habit => habit && habit.id && !habit.deleted).map(habit => ({
           ...habit,
           completedDates: habit.completedDates || [],
           title: habit.title || 'Habit',
@@ -278,7 +287,7 @@ export const getFavoriteHabits = async (userId?: string): Promise<Habit[]> => {
     
     // Fall back to local storage
     const localFavorites = await getLocalFavoriteHabits();
-    return localFavorites.filter(habit => habit && habit.id).map(habit => ({
+    return localFavorites.filter(habit => habit && habit.id && !habit.deleted).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
       title: habit.title || 'Habit',
