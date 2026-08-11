@@ -114,7 +114,6 @@ export default function HabitsPage() {
             onHabitDeleted={handleHabitDeleted}
             onHabitUpdated={handleHabitUpdated}
             onFavoriteToggled={handleFavoriteToggled}
-            userId={isFirebaseUser && user ? (user as any).uid : undefined}
           />
         </>
       )}

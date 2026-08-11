@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { Habit } from "@/types/habit";
 import { getHabitStats, getCompletionData } from "@/lib/habitAnalytics";
-import { toggleHabitCompletion, softDeleteHabit, toggleFavorite } from "@/lib/firebase/habits";
+import { toggleHabitCompletion as toggleHybridCompletion, softDeleteHabit as softDeleteHybridHabit, toggleFavorite as toggleHybridFavorite } from "@/lib/habitsHybrid";
 import {
   Flame,
   Trash2,
@@ -32,6 +32,7 @@ interface HabitListProps {
   onHabitDeleted: (habitId: string) => void;
   onHabitUpdated: (habit: Habit) => void;
   onFavoriteToggled?: (habitId: string, isFavorite: boolean) => void;
+  userId?: string;
 }
 
 export default function HabitList({
@@ -39,6 +40,7 @@ export default function HabitList({
   onHabitDeleted,
   onHabitUpdated,
   onFavoriteToggled,
+  userId,
 }: HabitListProps) {
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [expandedHabits, setExpandedHabits] = useState<Record<string, boolean>>(
@@ -61,7 +63,7 @@ export default function HabitList({
   const handleToggleCompletion = async (habit: Habit) => {
     try {
       const today = new Date();
-      await toggleHabitCompletion(habit.id, today);
+      await toggleHybridCompletion(habit.id, today, userId);
 
       const isCompleted = habit.completedDates.some(
         (d) => new Date(d).toDateString() === today.toDateString(),
@@ -88,7 +90,7 @@ export default function HabitList({
     
     setDeletingId(habitToDelete.id);
     try {
-      await softDeleteHabit(habitToDelete.id);
+      await softDeleteHybridHabit(habitToDelete.id, userId);
       onHabitDeleted(habitToDelete.id);
       setDeleteDialogOpen(false);
       setHabitToDelete(null);
@@ -108,7 +110,7 @@ export default function HabitList({
     setFavoritingId(habit.id);
     try {
       const newFavoriteStatus = !habit.favorite;
-      await toggleFavorite(habit.id, newFavoriteStatus);
+      await toggleHybridFavorite(habit.id, newFavoriteStatus, userId);
       onHabitUpdated({ ...habit, favorite: newFavoriteStatus });
       if (onFavoriteToggled) {
         onFavoriteToggled(habit.id, newFavoriteStatus);
