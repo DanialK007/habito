@@ -36,10 +36,10 @@ export default function Home() {
     <div className="min-h-screen bg-stone-50">
       {/* Navigation */}
       <nav className="border-b border-stone-200 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-stone-900 rounded-lg flex items-center justify-center">
+              <div className="w-8 h-8 bg-stone-900 rounded-2xl flex items-center justify-center">
                 <Target className="w-5 h-5 text-white" />
               </div>
               <span className="text-xl font-semibold text-stone-900">Habito</span>
@@ -57,9 +57,9 @@ export default function Home() {
 
       {/* Hero Section */}
       <section className="py-20 sm:py-32">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center max-w-3xl mx-auto">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-stone-900 mb-6">
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-stone-900 mb-6">
               Build better habits,
               <span className="text-stone-400"> one day at a time</span>
             </h1>
@@ -110,7 +110,7 @@ export default function Home() {
 
       {/* Features Section */}
       <section className="py-20 bg-white">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
               Everything you need to build lasting habits
@@ -121,8 +121,8 @@ export default function Home() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-orange-100 rounded-2xl flex items-center justify-center mb-4">
                 <Flame className="w-6 h-6 text-orange-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -133,8 +133,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-green-100 rounded-2xl flex items-center justify-center mb-4">
                 <Calendar className="w-6 h-6 text-green-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -145,8 +145,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-blue-100 rounded-2xl flex items-center justify-center mb-4">
                 <TrendingUp className="w-6 h-6 text-blue-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -157,8 +157,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-purple-100 rounded-2xl flex items-center justify-center mb-4">
                 <Zap className="w-6 h-6 text-purple-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -169,8 +169,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-stone-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-stone-100 rounded-2xl flex items-center justify-center mb-4">
                 <Shield className="w-6 h-6 text-stone-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -181,8 +181,8 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="bg-stone-50 border border-stone-200 rounded-lg p-6">
-              <div className="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mb-4">
+            <div className="bg-stone-50 border border-stone-200 rounded-2xl p-6">
+              <div className="w-12 h-12 bg-red-100 rounded-2xl flex items-center justify-center mb-4">
                 <Check className="w-6 h-6 text-red-600" />
               </div>
               <h3 className="text-lg font-semibold text-stone-900 mb-2">
@@ -198,7 +198,7 @@ export default function Home() {
 
       {/* How It Works */}
       <section className="py-20 bg-stone-50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="text-center mb-16">
             <h2 className="text-3xl sm:text-4xl font-bold text-stone-900 mb-4">
               How it works
@@ -250,7 +250,7 @@ export default function Home() {
 
       {/* CTA Section */}
       <section className="py-20 bg-stone-900">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 text-center">
           <h2 className="text-3xl sm:text-4xl font-bold text-white mb-4">
             Ready to build better habits?
           </h2>
@@ -287,10 +287,10 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="bg-stone-50 border-t border-stone-200 py-8">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 md:px-8">
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 bg-stone-900 rounded flex items-center justify-center">
+              <div className="w-6 h-6 bg-stone-900 rounded-2xl flex items-center justify-center">
                 <Target className="w-4 h-4 text-white" />
               </div>
               <span className="text-sm font-medium text-stone-900">Habito</span>

@@ -57,7 +57,7 @@ export default function FavoritesPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Page Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-2 text-gray-500 text-xs sm:text-sm mb-2">

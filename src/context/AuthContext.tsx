@@ -13,6 +13,7 @@ import { auth } from '@/lib/firebase/config';
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  isFirebaseUser: boolean;
   signInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
 }
@@ -22,10 +23,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isFirebaseUser, setIsFirebaseUser] = useState(false);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      setUser(user);
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      setUser(firebaseUser);
+      setIsFirebaseUser(!!firebaseUser); // Firebase user exists
       setLoading(false);
     });
 
@@ -44,7 +47,14 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const signOut = async () => {
     try {
-      await firebaseSignOut(auth);
+      if (user) {
+        // Firebase user
+        await firebaseSignOut(auth);
+      } else {
+        // Local user
+        localStorage.clear();
+        setUser(null);
+      }
     } catch (error) {
       console.error('Error signing out:', error);
       throw error;
@@ -52,7 +62,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, signOut }}>
+    <AuthContext.Provider value={{ user, loading, isFirebaseUser, signInWithGoogle, signOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -220,14 +220,14 @@ export default function HabitList({
         return (
           <div
             key={habit.id}
-            className="bg-white border border-stone-200 rounded-sm overflow-hidden"
+            className="bg-white border border-stone-200 rounded-2xl  overflow-hidden"
           >
             {/* Main habit row */}
             <div className="flex items-center gap-2 sm:gap-3 px-3 sm:px-4 py-3 hover:bg-stone-50">
               {/* Expand button */}
               <button
                 onClick={() => toggleHabitExpansion(habit.id)}
-                className="flex-shrink-0 p-1 hover:bg-stone-200 rounded"
+                className="flex-shrink-0 p-1 hover:bg-stone-200 rounded-2xl"
               >
                 {isExpanded ? (
                   <ChevronUp className="w-4 h-4 text-stone-400" />

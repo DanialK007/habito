@@ -29,8 +29,8 @@ export default function RootLayout({
         <AuthProvider>
           <div className="flex min-h-screen">
             <Sidebar />
-            <main className="pt-4 flex-1 lg:pt-0">
-              <div className="pb-16 lg:pb-0">
+            <main className="pt-4 flex-1 md:pt-0">
+              <div className="pb-16 md:pb-0">
                 {children}
               </div>
             </main>

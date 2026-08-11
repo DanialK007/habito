@@ -28,7 +28,7 @@ export default function HabitAnalytics({ habits }: HabitAnalyticsProps) {
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mb-6 sm:mb-8">
-      <div className="bg-white p-3 sm:p-4 rounded border border-stone-200">
+      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-stone-200">
         <div className="flex items-center gap-2 mb-2">
           <Flame className="w-4 h-4 text-orange-500" />
           <span className="text-xs font-medium text-stone-500 uppercase tracking-wide">Current Streak</span>
@@ -37,7 +37,7 @@ export default function HabitAnalytics({ habits }: HabitAnalyticsProps) {
         <p className="text-xs text-stone-400">Total active streak days</p>
       </div>
 
-      <div className="bg-white p-3 sm:p-4 rounded border border-stone-200">
+      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-stone-200">
         <div className="flex items-center gap-2 mb-2">
           <Target className="w-4 h-4 text-green-500" />
           <span className="text-xs font-medium text-stone-500 uppercase tracking-wide">Completion Rate</span>
@@ -46,7 +46,7 @@ export default function HabitAnalytics({ habits }: HabitAnalyticsProps) {
         <p className="text-xs text-stone-400">Average this week</p>
       </div>
 
-      <div className="bg-white p-3 sm:p-4 rounded border border-stone-200">
+      <div className="bg-white p-3 sm:p-4 rounded-2xl border border-stone-200">
         <div className="flex items-center gap-2 mb-2">
           <TrendingUp className="w-4 h-4 text-blue-500" />
           <span className="text-xs font-medium text-stone-500 uppercase tracking-wide">Total Completions</span>

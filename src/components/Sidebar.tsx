@@ -12,9 +12,7 @@ import {
   Plus,
   Search,
   Star,
-  Trash2,
-  Menu,
-  X
+  Trash2
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import Link from 'next/link';
@@ -29,12 +27,11 @@ import {
 import { Button } from '@/components/ui/button';
 
 export default function Sidebar() {
-  const { user, signOut } = useAuth();
+  const { user, signOut, isFirebaseUser } = useAuth();
   const pathname = usePathname();
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     habits: true,
   });
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
   const [isSigningOut, setIsSigningOut] = useState(false);
 
@@ -67,64 +64,33 @@ export default function Sidebar() {
   const isActive = (path: string) => pathname === path;
 
   return (
-    <>
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setIsMobileMenuOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white border border-stone-200 rounded-lg shadow-sm"
-      >
-        <Menu className="w-5 h-5 text-stone-700" />
-      </button>
-
-      {/* Mobile overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/50 z-40"
-          onClick={() => setIsMobileMenuOpen(false)}
-        />
-      )}
-
-      {/* Sidebar */}
-      <aside className={`
-        fixed lg:sticky left-0 top-0 h-screen bg-stone-50 border-r border-stone-200 
-        flex flex-col z-50 transition-transform duration-300 ease-in-out
-        ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
-        w-60
-      `}>
-        {/* Mobile close button */}
-        <button
-          onClick={() => setIsMobileMenuOpen(false)}
-          className="lg:hidden absolute top-4 right-4 p-2 hover:bg-stone-200 rounded"
-        >
-          <X className="w-5 h-5 text-stone-500" />
-        </button>
-
+    <div className='h-screen p-2 hidden md:block md:sticky md:top-0 md:z-50'>
+      <aside className="h-full bg-white border border-gray-200 rounded-3xl flex flex-col w-60">
         {/* Workspace Header */}
-        <div className="p-3 border-b border-stone-200">
-          <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1.5 hover:bg-stone-200 rounded cursor-pointer">
-            <div className="w-6 h-6 bg-blue-500 rounded flex items-center justify-center text-white text-xs font-semibold">
+        <div className="p-4 border-b border-gray-200">
+          <Link href="/dashboard" className="flex items-center gap-2 px-2 py-1.5 hover:bg-gray-50 rounded-full cursor-pointer transition-colors">
+            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white text-sm font-semibold shadow-sm">
               H
             </div>
-            <span className="text-sm font-medium text-stone-800">Habito</span>
+            <span className="text-sm font-semibold text-gray-900">Habito</span>
           </Link>
         </div>
 
         {/* Search */}
-        <div className="p-2">
-          <button className="w-full flex items-center gap-2 px-2 py-1.5 text-stone-500 hover:bg-stone-200 rounded text-sm">
+        <div className="p-3">
+          <button className="w-full flex items-center gap-2 px-4 py-2 text-gray-500 hover:bg-gray-50 rounded-full text-sm transition-colors border border-transparent hover:border-gray-200">
             <Search className="w-4 h-4" />
             <span>Search</span>
           </button>
         </div>
 
         {/* Navigation */}
-        <div className="flex-1 overflow-y-auto px-2">
+        <div className="flex-1 overflow-y-auto px-3">
           <nav className="space-y-1">
             <Link 
               href="/dashboard"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
-                isActive('/dashboard') ? 'bg-stone-200 text-stone-900' : 'text-stone-700 hover:bg-stone-200'
+              className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold transition-colors border border-transparent ${
+                isActive('/dashboard') ? 'bg-gray-100' : 'text-gray-900 hover:bg-gray-50 hover:border-gray-200'
               }`}
             >
               <Home className="w-4 h-4" />
@@ -135,7 +101,7 @@ export default function Sidebar() {
             <div>
               <button
                 onClick={() => toggleSection('habits')}
-                className="w-full flex items-center justify-between px-2 py-1.5 text-stone-700 hover:bg-stone-200 rounded text-sm"
+                className="w-full flex items-center justify-between px-4 py-2 text-gray-900 hover:bg-gray-50 rounded-full text-sm transition-colors border border-transparent hover:border-gray-200"
               >
                 <div className="flex items-center gap-2">
                   {expandedSections.habits ? (
@@ -145,16 +111,15 @@ export default function Sidebar() {
                   )}
                   <span>Habits</span>
                 </div>
-                <Plus className="w-4 h-4 text-stone-400" />
+                <Plus className="w-4 h-4 text-gray-500" />
               </button>
 
               {expandedSections.habits && (
                 <div className="ml-4 mt-1 space-y-0.5">
                   <Link 
                     href="/habits"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
-                      isActive('/habits') ? 'bg-stone-200 text-stone-900' : 'text-stone-600 hover:bg-stone-200'
+                    className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
+                      isActive('/habits') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
                     }`}
                   >
                     <Calendar className="w-4 h-4" />
@@ -162,9 +127,8 @@ export default function Sidebar() {
                   </Link>
                   <Link 
                     href="/favorites"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
-                      isActive('/favorites') ? 'bg-stone-200 text-stone-900' : 'text-stone-600 hover:bg-stone-200'
+                    className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
+                      isActive('/favorites') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
                     }`}
                   >
                     <Star className="w-4 h-4" />
@@ -172,9 +136,8 @@ export default function Sidebar() {
                   </Link>
                   <Link 
                     href="/trash"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
-                      isActive('/trash') ? 'bg-stone-200 text-stone-900' : 'text-stone-600 hover:bg-stone-200'
+                    className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
+                      isActive('/trash') ? 'bg-gray-100' : 'text-gray-500 hover:bg-gray-50 hover:border-gray-200'
                     }`}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -186,9 +149,8 @@ export default function Sidebar() {
 
             <Link 
               href="/settings"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className={`w-full flex items-center gap-2 px-2 py-1.5 rounded text-sm ${
-                isActive('/settings') ? 'bg-stone-200 text-stone-900' : 'text-stone-700 hover:bg-stone-200'
+              className={`w-full flex items-center gap-2 px-4 py-2 rounded-full text-sm transition-colors border border-transparent ${
+                isActive('/settings') ? 'bg-gray-100' : 'text-gray-900 hover:bg-gray-50 hover:border-gray-200'
               }`}
             >
               <Settings className="w-4 h-4" />
@@ -198,24 +160,24 @@ export default function Sidebar() {
         </div>
 
         {/* User Section */}
-        <div className="p-2 border-t border-stone-200">
-          <div className="flex items-center gap-2 px-2 py-1.5">
-            {user?.photoURL && (
+        <div className="p-3 border-t border-gray-200">
+          <div className="flex items-center gap-2 px-2 py-2">
+            {(user as any)?.photoURL && (
               <img
-                src={user.photoURL}
+                src={(user as any).photoURL}
                 alt="User avatar"
-                className="w-6 h-6 rounded-full"
+                className="w-8 h-8 rounded-full object-cover"
               />
             )}
-            <span className="text-sm text-stone-700 truncate flex-1">
-              {user?.displayName || 'User'}
+            <span className="text-sm text-gray-800 truncate flex-1 font-medium">
+              {(user as any)?.displayName || 'User'}
             </span>
             <button
               onClick={handleSignOutClick}
-              className="p-1 hover:bg-stone-200 rounded"
-              title="Sign out"
+              className="p-1.5 hover:bg-gray-100 rounded-2xl transition-colors"
+              title={isFirebaseUser ? "Sign out" : "Reset data"}
             >
-              <LogOut className="w-4 h-4 text-stone-500" />
+              <LogOut className="w-4 h-4 text-gray-400" />
             </button>
           </div>
         </div>
@@ -223,27 +185,30 @@ export default function Sidebar() {
 
       {/* Logout Confirmation Dialog */}
       <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
-        <DialogContent>
+        <DialogContent className="rounded-2xl bg-gray-50 min-w-72">
           <DialogHeader>
-            <DialogTitle>Sign Out</DialogTitle>
-            <DialogDescription>
-              Are you sure you want to sign out? You'll need to sign in again to access your habits.
+            <DialogTitle className="text-gray-800">{isFirebaseUser ? 'Sign Out' : 'Reset Data'}</DialogTitle>
+            <DialogDescription className="text-gray-500">
+              {isFirebaseUser 
+                ? 'Are you sure you want to sign out?' 
+                : 'This will clear all your local data. This action cannot be undone.'}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="ghost" onClick={cancelSignOut}>
+            <Button variant="ghost" onClick={cancelSignOut} className="rounded-2xl bg-gray-200 hover:bg-gray-300 text-gray-600 hover:text-gray-800">
               Cancel
             </Button>
             <Button 
               variant="destructive" 
               onClick={confirmSignOut}
               disabled={isSigningOut}
+              className="rounded-2xl bg-red-500 hover:bg-red-600 text-white"
             >
-              {isSigningOut ? "Signing out..." : "Sign Out"}
+              {isSigningOut ? "Signing out..." : (isFirebaseUser ? "Sign Out" : "Reset Data")}
             </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </>
+    </div>
   );
 }

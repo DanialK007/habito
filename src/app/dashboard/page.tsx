@@ -139,7 +139,7 @@ export default function Dashboard() {
     todayCompletion.total > 0;
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Page Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-2 text-gray-500 text-xs sm:text-sm mb-2">
@@ -164,7 +164,7 @@ export default function Dashboard() {
       <div className="grid grid-cols-3 gap-3 sm:gap-4 mb-6">
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3 sm:p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-orange-100 rounded-2xl flex items-center justify-center">
               <Flame className="w-4 h-4 sm:w-5 sm:h-5 text-orange-600" />
             </div>
             <span className="text-lg sm:text-2xl font-bold text-gray-900">
@@ -176,7 +176,7 @@ export default function Dashboard() {
 
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3 sm:p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-blue-100 rounded-2xl flex items-center justify-center">
               <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-blue-600" />
             </div>
             <span className="text-lg sm:text-2xl font-bold text-gray-900">
@@ -188,7 +188,7 @@ export default function Dashboard() {
 
         <div className="bg-gray-50 border border-gray-200 rounded-2xl p-3 sm:p-4">
           <div className="flex items-center justify-between mb-2">
-            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900/10 rounded-lg flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-10 sm:h-10 bg-gray-900/10 rounded-2xl flex items-center justify-center">
               <Target className="w-4 h-4 sm:w-5 sm:h-5 text-gray-900" />
             </div>
             <span className="text-lg sm:text-2xl font-bold text-gray-900">
@@ -218,7 +218,7 @@ export default function Dashboard() {
 
             <div className="flex-shrink-0">
               <div
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all ${allCompletedToday ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-gray-50 border border-gray-200"}`}
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all ${allCompletedToday ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-gray-600 border border-gray-200"}`}
               >
                 <Check className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
@@ -361,7 +361,7 @@ export default function Dashboard() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 mb-4">
           <Button
             onClick={() => router.push("/habits")}
-            className="h-12 text-base"
+            className="h-12 text-base rounded-full"
           >
             <Plus className="w-5 h-5 mr-2" />
             Add New Habit
@@ -369,7 +369,7 @@ export default function Dashboard() {
           <Button
             variant="outline"
             onClick={() => router.push("/habits")}
-            className="h-12 text-base"
+            className="h-12 text-base rounded-full"
           >
             <Target className="w-5 h-5 mr-2" />
             View All Habits

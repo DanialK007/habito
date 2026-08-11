@@ -2,11 +2,19 @@
   "name": "habito",
   "version": "0.1.0",
   "private": true,
+  "description": "A simple habit tracker app",
+  "author": "Danial K",
+  "main": "electron/main.js",
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "electron": "electron .",
+    "electron:dev": "concurrently \"npm run dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:build": "npm run build && electron-builder --publish=never",
+    "electron:build:mac": "npm run build && electron-builder --mac --publish=never",
+    "electron:build:win": "npm run build && electron-builder --win --publish=never"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.23",
@@ -31,9 +39,48 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "concurrently": "^9.1.2",
+    "electron": "^41.7.1",
+    "electron-builder": "^26.15.3",
+    "electron-is-dev": "^4.0.0",
     "eslint": "^9",
     "eslint-config-next": "16.2.12",
     "tailwindcss": "^4",
-    "typescript": "^5"
+    "typescript": "^5",
+    "wait-on": "^8.0.1"
+  },
+  "build": {
+    "appId": "com.habito.app",
+    "productName": "Habito",
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "electron/**/*",
+      "out/**/*",
+      "package.json",
+      ".env.local"
+    ],
+    "mac": {
+      "category": "public.app-category.productivity",
+      "target": [
+        {
+          "target": "dmg",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }

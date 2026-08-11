@@ -64,7 +64,7 @@ export default function HabitsPage() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 md:px-8 py-8">
       {/* Page Header */}
       <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-2 text-gray-500 text-xs sm:text-sm mb-2">
@@ -80,8 +80,8 @@ export default function HabitsPage() {
       </div>
 
       {habits.length === 0 ? (
-        <div className="text-center py-12 sm:py-16 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50">
-          <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-200 rounded-lg mb-4">
+        <div className="text-center py-12 sm:py-16 border-2 border-dashed border-gray-300 rounded-2xl bg-gray-50">
+          <div className="inline-flex items-center justify-center w-12 h-12 bg-gray-200 rounded-2xl mb-4">
             <Plus className="w-6 h-6 text-gray-400" />
           </div>
           <h3 className="text-base sm:text-lg font-medium text-gray-800 mb-2">
@@ -103,7 +103,7 @@ export default function HabitsPage() {
             <h2 className="text-xl sm:text-2xl font-semibold text-gray-800">
               Active Habits
             </h2>
-            <Button onClick={() => setIsAddDialogOpen(true)} className="w-full sm:w-auto">
+            <Button onClick={() => setIsAddDialogOpen(true)} className="w-full sm:w-auto rounded-full">
               <Plus className="w-4 h-4 mr-2" />
               Add Habit
             </Button>
