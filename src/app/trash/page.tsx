@@ -175,7 +175,7 @@ export default function TrashPage() {
         <DialogHeader>
           <DialogTitle className="text-gray-800">Permanently Delete</DialogTitle>
           <DialogDescription className="text-gray-500">
-            Are you sure you want to permanently delete "{habitToDelete?.title || habitToDelete?.name}"? This action cannot be undone.
+            Are you sure you want to permanently delete "{habitToDelete?.title}"? This action cannot be undone.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter>

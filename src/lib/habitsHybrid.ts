@@ -2,7 +2,7 @@
 
 import { Habit } from '@/types/habit';
 import { getUserHabits as getFirebaseHabits } from '@/lib/firebase/habits';
-import { getLocalHabits, createLocalHabit, updateLocalHabit, toggleLocalHabitCompletion, softDeleteLocalHabit, restoreLocalHabit, permanentlyDeleteLocalHabit, toggleLocalHabitFavorite, getLocalDeletedHabits, getLocalFavoriteHabits } from '@/lib/habitsLocal';
+import { getLocalHabits, getLocalHabitById, createLocalHabit, updateLocalHabit, toggleLocalHabitCompletion, softDeleteLocalHabit, restoreLocalHabit, permanentlyDeleteLocalHabit, toggleLocalHabitFavorite, getLocalDeletedHabits, getLocalFavoriteHabits } from '@/lib/habitsLocal';
 import { localStorageService } from './localStorage';
 
 // Sync Firebase habits to local storage
@@ -107,10 +107,12 @@ export const toggleHabitCompletion = async (habitId: string, date: Date, userId?
       try {
         // Try Firebase first
         const { toggleHabitCompletion: toggleFirebaseCompletion } = await import('@/lib/firebase/habits');
-        const firebaseHabit = await toggleFirebaseCompletion(habitId, date);
+        await toggleFirebaseCompletion(habitId, date);
         // Also update local storage
         await toggleLocalHabitCompletion(habitId, date.toISOString().split('T')[0]);
-        return firebaseHabit;
+        // Fetch the updated habit from local storage
+        const updatedHabit = await getLocalHabitById(habitId);
+        if (updatedHabit) return updatedHabit;
       } catch (firebaseError) {
         console.log('Firebase not available, using local storage');
       }

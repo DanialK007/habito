@@ -47,7 +47,7 @@ export const getLocalHabitById = async (id: string): Promise<Habit | null> => {
 };
 
 // Create a new habit
-export const createLocalHabit = async (habitData: Omit<Habit, 'id' | 'completedDates' | 'createdAt' | 'updatedAt'>): Promise<Habit> => {
+export const createLocalHabit = async (habitData: Omit<Habit, 'id' | 'completedDates' | 'createdAt'>): Promise<Habit> => {
   try {
     await localStorageService.init();
     
@@ -57,7 +57,6 @@ export const createLocalHabit = async (habitData: Omit<Habit, 'id' | 'completedD
       completedDates: [],
       deleted: false,
       createdAt: new Date(),
-      updatedAt: new Date(),
     };
 
     // Convert to storage format
@@ -90,7 +89,6 @@ export const updateLocalHabit = async (id: string, updates: Partial<Habit>): Pro
       ...existingHabit,
       ...updates,
       id, // Ensure ID is preserved
-      updatedAt: new Date(),
     };
 
     // Convert to storage format
@@ -133,7 +131,6 @@ export const toggleLocalHabitCompletion = async (id: string, date: string): Prom
     const updatedHabit = {
       ...habit,
       completedDates: updatedCompletedDates,
-      updatedAt: new Date().toISOString(),
     };
 
     await localStorageService.saveHabit(updatedHabit);
@@ -215,7 +212,6 @@ export const toggleLocalHabitFavorite = async (id: string): Promise<Habit> => {
     const updatedHabit = {
       ...habit,
       favorite: !habit.favorite,
-      updatedAt: new Date().toISOString(),
     };
 
     await localStorageService.saveHabit(updatedHabit);
