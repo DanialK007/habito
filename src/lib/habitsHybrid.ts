@@ -55,9 +55,8 @@ export const getHabits = async (userId?: string): Promise<Habit[]> => {
           ...habit,
           // Ensure completedDates is always an array
           completedDates: habit.completedDates || [],
-          // Ensure both name and title fields exist for compatibility
-          name: habit.name || habit.title || 'Habit',
-          title: habit.title || habit.name || 'Habit',
+          // Ensure title field exists
+          title: habit.title || 'Habit',
         }));
       } catch (firebaseError) {
         console.log('Firebase not available, falling back to local storage');
@@ -69,8 +68,7 @@ export const getHabits = async (userId?: string): Promise<Habit[]> => {
     return localHabits.filter(habit => habit && habit.id).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
-      name: habit.name || habit.title || 'Habit',
-      title: habit.title || habit.name || 'Habit',
+      title: habit.title || 'Habit',
     }));
   } catch (error) {
     console.error('Error getting habits:', error);
@@ -237,8 +235,7 @@ export const getDeletedHabits = async (userId?: string): Promise<Habit[]> => {
         return firebaseDeleted.filter(habit => habit && habit.id).map(habit => ({
           ...habit,
           completedDates: habit.completedDates || [],
-          name: habit.name || habit.title || 'Habit',
-          title: habit.title || habit.name || 'Habit',
+          title: habit.title || 'Habit',
         }));
       } catch (firebaseError) {
         console.log('Firebase not available, using local storage');
@@ -250,8 +247,7 @@ export const getDeletedHabits = async (userId?: string): Promise<Habit[]> => {
     return localDeleted.filter(habit => habit && habit.id).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
-      name: habit.name || habit.title || 'Habit',
-      title: habit.title || habit.name || 'Habit',
+      title: habit.title || 'Habit',
     }));
   } catch (error) {
     console.error('Error getting deleted habits:', error);
@@ -271,8 +267,7 @@ export const getFavoriteHabits = async (userId?: string): Promise<Habit[]> => {
         return firebaseFavorites.filter(habit => habit && habit.id).map(habit => ({
           ...habit,
           completedDates: habit.completedDates || [],
-          name: habit.name || habit.title || 'Habit',
-          title: habit.title || habit.name || 'Habit',
+          title: habit.title || 'Habit',
         }));
       } catch (firebaseError) {
         console.log('Firebase not available, using local storage');
@@ -284,8 +279,7 @@ export const getFavoriteHabits = async (userId?: string): Promise<Habit[]> => {
     return localFavorites.filter(habit => habit && habit.id).map(habit => ({
       ...habit,
       completedDates: habit.completedDates || [],
-      name: habit.name || habit.title || 'Habit',
-      title: habit.title || habit.name || 'Habit',
+      title: habit.title || 'Habit',
     }));
   } catch (error) {
     console.error('Error getting favorite habits:', error);

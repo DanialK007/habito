@@ -130,7 +130,7 @@ export default function TrashPage() {
             >
               <div className="flex-1 min-w-0">
                 <h3 className="text-sm font-medium text-gray-800 mb-1">
-                  {habit.title || habit.name}
+                  {habit.title}
                 </h3>
                 {habit.description && (
                   <p className="text-xs text-gray-500 truncate">
