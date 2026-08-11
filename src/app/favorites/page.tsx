@@ -34,7 +34,8 @@ export default function FavoritesPage() {
   };
 
   const handleHabitDeleted = (habitId: string) => {
-    setHabits(habits.filter(h => h.id !== habitId));
+    // Refresh the habits list from database instead of filtering local array
+    fetchHabits();
   };
 
   const handleHabitUpdated = (updatedHabit: Habit) => {
@@ -42,9 +43,9 @@ export default function FavoritesPage() {
   };
 
   const handleFavoriteToggled = (habitId: string, isFavorite: boolean) => {
-    // If a habit is unfavorited, remove it from the favorites list
+    // If a habit is unfavorited, refresh the list from database
     if (!isFavorite) {
-      setHabits(habits.filter(h => h.id !== habitId));
+      fetchHabits();
     }
   };
 
@@ -90,6 +91,7 @@ export default function FavoritesPage() {
           onHabitDeleted={handleHabitDeleted}
           onHabitUpdated={handleHabitUpdated}
           onFavoriteToggled={handleFavoriteToggled}
+          userId={isFirebaseUser && user ? (user as any).uid : undefined}
         />
       )}
     </div>

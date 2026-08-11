@@ -129,29 +129,37 @@ export const toggleHabitCompletion = async (habitId: string, date: Date, userId?
 
 // Soft delete habit - tries Firebase first, falls back to local storage
 export const softDeleteHabit = async (habitId: string, userId?: string): Promise<void> => {
+  console.log('Soft delete called for habit:', habitId, 'userId:', userId);
   try {
     if (userId) {
       try {
         // Try Firebase first
         const { softDeleteHabit: softDeleteFirebaseHabit } = await import('@/lib/firebase/habits');
+        console.log('Attempting Firebase soft delete');
         await softDeleteFirebaseHabit(habitId);
+        console.log('Firebase soft delete successful');
         // Also update local storage after Firebase succeeds
         await softDeleteLocalHabit(habitId);
-        console.log('Habit soft deleted in Firebase and local storage');
+        console.log('Local storage soft delete successful');
         return;
       } catch (firebaseError) {
-        console.log('Firebase not available, using local storage only');
+        console.log('Firebase not available, using local storage only:', firebaseError);
       }
+    } else {
+      console.log('No userId provided, using local storage directly');
     }
     
     // Fall back to local storage only
+    console.log('Attempting local storage soft delete');
     await softDeleteLocalHabit(habitId);
-    console.log('Habit soft deleted in local storage only');
+    console.log('Local storage soft delete successful');
   } catch (error) {
     console.error('Error soft deleting habit:', error);
     // Try local storage as final fallback
     try {
+      console.log('Attempting local storage fallback');
       await softDeleteLocalHabit(habitId);
+      console.log('Local storage fallback successful');
     } catch (localError) {
       console.error('Local storage fallback also failed:', localError);
     }

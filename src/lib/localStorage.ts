@@ -86,21 +86,35 @@ class LocalStorageService {
       const transaction = this.db!.transaction([HABITS_STORE], 'readwrite');
       const store = transaction.objectStore(HABITS_STORE);
       
+      console.log('Soft delete habit with id:', id);
+      
       // Soft delete
       const getRequest = store.get(id);
       getRequest.onsuccess = () => {
         const habit = getRequest.result;
+        console.log('Found habit for soft delete:', habit);
         if (habit) {
           habit.deleted = true;
           habit.deletedAt = new Date().toISOString();
+          console.log('Updating habit with deleted flag:', habit);
           const putRequest = store.put(habit);
-          putRequest.onerror = () => reject(putRequest.error);
-          putRequest.onsuccess = () => resolve();
+          putRequest.onerror = () => {
+            console.error('Error putting deleted habit:', putRequest.error);
+            reject(putRequest.error);
+          };
+          putRequest.onsuccess = () => {
+            console.log('Soft delete successful for habit:', id);
+            resolve();
+          };
         } else {
+          console.log('Habit not found for soft delete:', id);
           resolve();
         }
       };
-      getRequest.onerror = () => reject(getRequest.error);
+      getRequest.onerror = () => {
+        console.error('Error getting habit for soft delete:', getRequest.error);
+        reject(getRequest.error);
+      };
     });
   }
 

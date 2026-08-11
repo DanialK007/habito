@@ -28,7 +28,9 @@ export default function HabitsPage() {
   const fetchHabits = async () => {
     try {
       const userId = isFirebaseUser && user ? (user as any).uid : undefined;
+      console.log('Fetching habits with userId:', userId);
       const userHabits = await getHybridHabits(userId);
+      console.log('Fetched habits:', userHabits);
       setHabits(userHabits);
     } catch (error) {
       console.error('Error fetching habits:', error);
@@ -42,7 +44,9 @@ export default function HabitsPage() {
   };
 
   const handleHabitDeleted = (habitId: string) => {
-    setHabits(habits.filter(h => h.id !== habitId));
+    console.log('handleHabitDeleted called for habit:', habitId);
+    // Refresh the habits list from database instead of filtering local array
+    fetchHabits();
   };
 
   const handleHabitUpdated = (updatedHabit: Habit) => {
@@ -114,6 +118,7 @@ export default function HabitsPage() {
             onHabitDeleted={handleHabitDeleted}
             onHabitUpdated={handleHabitUpdated}
             onFavoriteToggled={handleFavoriteToggled}
+            userId={isFirebaseUser && user ? (user as any).uid : undefined}
           />
         </>
       )}

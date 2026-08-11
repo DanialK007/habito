@@ -90,13 +90,16 @@ export default function HabitList({
     
     setDeletingId(habitToDelete.id);
     try {
+      console.log('Starting delete for habit:', habitToDelete.id, 'userId:', userId);
       await softDeleteHybridHabit(habitToDelete.id, userId);
-      // Call the parent to refresh the habit list
+      console.log('Delete successful, calling parent to refresh');
+      // Call the parent to refresh the habit list from database
       onHabitDeleted(habitToDelete.id);
       setDeleteDialogOpen(false);
       setHabitToDelete(null);
     } catch (error) {
       console.error("Error deleting habit:", error);
+      alert('Failed to delete habit. Check console for details.');
     } finally {
       setDeletingId(null);
     }
