@@ -1,14 +1,12 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
-import { Home, Calendar, Star, Trash2, Settings } from "lucide-react";
+import { Home, Calendar, Star, Settings } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
-  const { user, signOut, isFirebaseUser } = useAuth();
   const navRefs = useRef<(HTMLAnchorElement | null)[]>([]);
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 });
 
@@ -16,7 +14,6 @@ export default function MobileBottomNav() {
     { href: "/dashboard", icon: Home, label: "Home" },
     { href: "/habits", icon: Calendar, label: "Habits" },
     { href: "/favorites", icon: Star, label: "Favorites" },
-    // { href: "/trash", icon: Trash2, label: "Trash" },
     { href: "/settings", icon: Settings, label: "Settings" },
   ];
 
@@ -37,16 +34,17 @@ export default function MobileBottomNav() {
     }
   }, [activeIndex, pathname]);
 
+  if (pathname === "/") return null;
+
   return (
-    <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
+    <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
       <div className="bg-neutral-50/60 backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
-        <div className="flex items-center justify-around px-2 py-2.5 relative">
+        <div className="flex items-center justify-around px-2 py-2 relative">
           {/* Sliding indicator */}
           <div
-            className="absolute -z-10 bottom-1.5 w-22 h-16 border border-neutral-200 bg-white/80 rounded-full transition-all duration-300 ease-out"
+            className="absolute -z-10 bottom-1 w-22 h-16 border border-neutral-200 bg-white/80 rounded-full transition-all duration-300 ease-out"
             style={{
               left: `${indicatorStyle.left}px`,
-              // width: `${indicatorStyle.width}px`,
             }}
           />
           {navItems.map((item, index) => {
