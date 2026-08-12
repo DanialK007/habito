@@ -38,11 +38,11 @@ export default function MobileBottomNav() {
 
   return (
     <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 p-2 w-full">
-      <div className="bg-neutral-50/75 backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
-        <div className="flex items-center justify-around px-2 py-2 relative">
+      <div className="bg-neutral-50/80 shadow-2xl shadow-white backdrop-blur-xs rounded-full border border-neutral-200 z-50 pb-safe">
+        <div className="flex items-center justify-around px-1.5 py-2 relative">
           {/* Sliding indicator */}
           <div
-            className="absolute -z-10 bottom-1 w-22 h-16 border border-neutral-200 bg-white/80 rounded-full transition-all duration-300 ease-out"
+            className="absolute -z-10 bottom-1 w-22 h-16 border border-neutral-200 bg-white/50 shadow-sm rounded-full transition-all duration-300 ease-out"
             style={{
               left: `${indicatorStyle.left}px`,
             }}
@@ -56,12 +56,12 @@ export default function MobileBottomNav() {
                 ref={(el) => { navRefs.current[index] = el; }}
                 className={`flex flex-col w-20 h-14 justify-center items-center gap-1 rounded-full transition-colors ${
                   isActive
-                    ? "text-orange-500"
+                    ? "text-orange-500 font-semibold"
                     : "text-gray-500 hover:text-orange-500"
                 }`}
               >
                 <item.icon className="w-5 h-5" />
-                <span className="text-xs font-medium">{item.label}</span>
+                <span className="text-xs">{item.label}</span>
               </Link>
             );
           })}

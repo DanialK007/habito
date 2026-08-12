@@ -1,6 +1,6 @@
 // Hybrid habits service - tries Firebase first, falls back to local storage
 
-import { Habit } from '@/types/habit';
+import { Habit, HabitFormData } from '@/types/habit';
 import { getUserHabits as getFirebaseHabits } from '@/lib/firebase/habits';
 import { getLocalHabits, getLocalHabitById, createLocalHabit, updateLocalHabit, toggleLocalHabitCompletion, softDeleteLocalHabit, restoreLocalHabit, permanentlyDeleteLocalHabit, toggleLocalHabitFavorite, getLocalDeletedHabits, getLocalFavoriteHabits } from '@/lib/habitsLocal';
 import { localStorageService } from './localStorage';
@@ -310,5 +310,35 @@ export const getFavoriteHabits = async (userId?: string): Promise<Habit[]> => {
   } catch (error) {
     console.error('Error getting favorite habits:', error);
     return [];
+  }
+};
+
+// Update habit - tries Firebase first, falls back to local storage
+export const updateHabit = async (habitId: string, updates: Partial<HabitFormData>, userId?: string): Promise<void> => {
+  try {
+    if (userId) {
+      try {
+        // Try Firebase first
+        const { updateHabit: updateFirebaseHabit } = await import('@/lib/firebase/habits');
+        await updateFirebaseHabit(habitId, updates);
+        // Also update local storage - fetch existing habit first to preserve other fields
+        const existingHabit = await getLocalHabitById(habitId);
+        if (existingHabit) {
+          await updateLocalHabit(habitId, { ...existingHabit, ...updates });
+        }
+        return;
+      } catch (firebaseError) {
+        console.log('Firebase not available, using local storage');
+      }
+    }
+    
+    // Fall back to local storage - fetch existing habit first to preserve other fields
+    const existingHabit = await getLocalHabitById(habitId);
+    if (existingHabit) {
+      await updateLocalHabit(habitId, { ...existingHabit, ...updates });
+    }
+  } catch (error) {
+    console.error('Error updating habit:', error);
+    throw error;
   }
 };

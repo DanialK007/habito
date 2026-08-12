@@ -6,6 +6,14 @@ import { useAuth } from '@/context/AuthContext';
 import { Settings, Trash2, User, Shield, Info, LogOut, Moon, Sun, Bell, Palette } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useTheme } from 'next-themes';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 
 export default function SettingsPage() {
   const { user, loading, isFirebaseUser, signOut } = useAuth();
@@ -13,6 +21,10 @@ export default function SettingsPage() {
   const { theme, setTheme } = useTheme();
   const [habitsCount, setHabitsCount] = useState(0);
   const [deletedCount, setDeletedCount] = useState(0);
+  const [logoutDialogOpen, setLogoutDialogOpen] = useState(false);
+  const [isSigningOut, setIsSigningOut] = useState(false);
+  const [clearDataDialogOpen, setClearDataDialogOpen] = useState(false);
+  const [isClearingData, setIsClearingData] = useState(false);
 
   useEffect(() => {
     // Allow access for both authenticated and local users
@@ -38,6 +50,25 @@ export default function SettingsPage() {
     }
   };
 
+  const handleSignOutClick = () => {
+    setLogoutDialogOpen(true);
+  };
+
+  const confirmSignOut = async () => {
+    setIsSigningOut(true);
+    try {
+      await signOut();
+      window.location.href = "/";
+    } catch (error) {
+      console.error("Error signing out:", error);
+      setIsSigningOut(false);
+    }
+  };
+
+  const cancelSignOut = () => {
+    setLogoutDialogOpen(false);
+  };
+
   const handleSignOut = async () => {
     try {
       await signOut();
@@ -47,18 +78,26 @@ export default function SettingsPage() {
     }
   };
 
-  const handleClearData = async () => {
-    if (confirm('Are you sure you want to clear all local data? This action cannot be undone.')) {
-      try {
-        const { localStorageService } = await import('@/lib/localStorage');
-        await localStorageService.clearAllData();
-        alert('Local data cleared successfully');
-        fetchStats();
-      } catch (error) {
-        console.error('Error clearing data:', error);
-        alert('Failed to clear data');
-      }
+  const handleClearDataClick = () => {
+    setClearDataDialogOpen(true);
+  };
+
+  const confirmClearData = async () => {
+    setIsClearingData(true);
+    try {
+      const { localStorageService } = await import('@/lib/localStorage');
+      await localStorageService.clearAllData();
+      setClearDataDialogOpen(false);
+      fetchStats();
+    } catch (error) {
+      console.error('Error clearing data:', error);
+    } finally {
+      setIsClearingData(false);
     }
+  };
+
+  const cancelClearData = () => {
+    setClearDataDialogOpen(false);
   };
 
   if (loading) {
@@ -131,7 +170,7 @@ export default function SettingsPage() {
           <div className="pt-4">
             <Button
               variant="outline"
-              onClick={handleSignOut}
+              onClick={handleSignOutClick}
               className="w-full sm:w-auto"
             >
               <LogOut className="w-4 h-4 mr-2" />
@@ -253,7 +292,7 @@ export default function SettingsPage() {
             <Button
               variant="outline"
               size="sm"
-              onClick={handleClearData}
+              onClick={handleClearDataClick}
               className="rounded-xl text-red-600 hover:text-red-700 hover:bg-red-50"
             >
               Clear Data
@@ -304,6 +343,72 @@ export default function SettingsPage() {
           </div>
         </div>
       </div>
+
+      {/* Sign Out Confirmation Dialog */}
+      <Dialog open={logoutDialogOpen} onOpenChange={setLogoutDialogOpen}>
+        <DialogContent className="rounded-2xl bg-neutral-50 min-w-72">
+          <DialogHeader>
+            <DialogTitle className="text-gray-800">
+              {isFirebaseUser ? "Sign Out" : "Reset Data"}
+            </DialogTitle>
+            <DialogDescription className="text-gray-500">
+              {isFirebaseUser
+                ? "Are you sure you want to sign out?"
+                : "This will clear all your local data. This action cannot be undone."}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={cancelSignOut}
+              className="rounded-2xl bg-neutral-200 hover:bg-neutral-300 text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmSignOut}
+              disabled={isSigningOut}
+              className="rounded-2xl bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isSigningOut
+                ? "Signing out..."
+                : isFirebaseUser
+                ? "Sign Out"
+                : "Reset Data"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Clear Data Confirmation Dialog */}
+      <Dialog open={clearDataDialogOpen} onOpenChange={setClearDataDialogOpen}>
+        <DialogContent className="rounded-2xl bg-neutral-50 min-w-72">
+          <DialogHeader>
+            <DialogTitle className="text-gray-800">Clear Local Data</DialogTitle>
+            <DialogDescription className="text-gray-500">
+              This will clear all your local data. This action cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="ghost"
+              onClick={cancelClearData}
+              className="rounded-2xl bg-neutral-200 hover:bg-neutral-300 text-gray-600 hover:text-gray-800"
+            >
+              Cancel
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={confirmClearData}
+              disabled={isClearingData}
+              className="rounded-2xl bg-red-500 hover:bg-red-600 text-white"
+            >
+              {isClearingData ? "Clearing..." : "Clear Data"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

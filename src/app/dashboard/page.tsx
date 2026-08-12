@@ -13,6 +13,70 @@ import { Button } from "@/components/ui/button";
 import { Flame, Target, TrendingUp, Plus, Check, Circle } from "lucide-react";
 import StreakHeatmap from "@/components/StreakHeatmap";
 
+const getTailwindColorClass = (color: string) => {
+  const colorMap: Record<string, string> = {
+    orange: "bg-orange-500",
+    blue: "bg-blue-500",
+    green: "bg-green-500",
+    purple: "bg-purple-500",
+    red: "bg-red-500",
+    yellow: "bg-yellow-500",
+    pink: "bg-pink-500",
+    cyan: "bg-cyan-500",
+    indigo: "bg-indigo-500",
+    gray: "bg-gray-500",
+  };
+  return colorMap[color] || colorMap.orange;
+};
+
+const getTailwindTextColorClass = (color: string) => {
+  const colorMap: Record<string, string> = {
+    orange: "text-orange-500",
+    blue: "text-blue-500",
+    green: "text-green-500",
+    purple: "text-purple-500",
+    red: "text-red-500",
+    yellow: "text-yellow-500",
+    pink: "text-pink-500",
+    cyan: "text-cyan-500",
+    indigo: "text-indigo-500",
+    gray: "text-gray-500",
+  };
+  return colorMap[color] || colorMap.orange;
+};
+
+const getTailwindShadowClass = (color: string) => {
+  const colorMap: Record<string, string> = {
+    orange: "shadow-orange-500/20 border-orange-500/50",
+    blue: "shadow-blue-500/20 border-blue-500/50",
+    green: "shadow-green-500/20 border-green-500/50",
+    purple: "shadow-purple-500/20 border-purple-500/50",
+    red: "shadow-red-500/20 border-red-500/50",
+    yellow: "shadow-yellow-500/20 border-yellow-500/50",
+    pink: "shadow-pink-500/20 border-pink-500/50",
+    cyan: "shadow-cyan-500/20 border-cyan-500/50",
+    indigo: "shadow-indigo-500/20 border-indigo-500/50",
+    gray: "shadow-gray-500/20 border-gray-500/50",
+  };
+  return colorMap[color] || colorMap.orange;
+};
+
+const getTailwindFadeColorClass = (color: string) => {
+  const colorMap: Record<string, string> = {
+    orange: "bg-orange-50",
+    blue: "bg-blue-50",
+    green: "bg-green-50",
+    purple: "bg-purple-50",
+    red: "bg-red-50",
+    yellow: "bg-yellow-50",
+    pink: "bg-pink-50",
+    cyan: "bg-cyan-50",
+    indigo: "bg-indigo-50",
+    gray: "bg-gray-50",
+  };
+  return colorMap[color] || colorMap.orange;
+};
+
 export default function Dashboard() {
   const { user, loading, isFirebaseUser } = useAuth();
   const router = useRouter();
@@ -169,7 +233,11 @@ export default function Dashboard() {
 
             <div className="flex-shrink-0">
               <div
-                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all ${allCompletedToday ? "bg-orange-500 shadow-lg shadow-orange-500/20" : "bg-neutral-600 border border-neutral-200"}`}
+                className={`w-12 h-12 sm:w-14 sm:h-14 rounded-full flex items-center justify-center transition-all ${
+                  allCompletedToday 
+                    ? "bg-orange-500 shadow-lg shadow-orange-500/20" 
+                    : "bg-neutral-600 border border-neutral-200"
+                }`}
               >
                 <Check className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
               </div>
@@ -212,8 +280,8 @@ export default function Dashboard() {
 
       {/* Today's Habits with Quick Actions */}
       {habits.length > 0 && (
-        <div className="bg-white border border-neutral-200 rounded-3xl p-4 sm:p-6 mb-6">
-          <div className="flex items-center justify-between mb-4">
+        <div className="md:bg-white md:border md:border-neutral-200 rounded-3xl mt-4 md:mt-0 md:p-6 mb-6">
+          <div className="flex items-center justify-between mb-2">
             <h2 className="text-lg sm:text-xl font-semibold text-gray-900">
               Today's Habits
             </h2>
@@ -233,11 +301,23 @@ export default function Dashboard() {
               .map((habit) => {
                 const stats = getHabitStats(habit);
                 const completed = isCompletedToday(habit);
+                const bgColorClass = getTailwindColorClass(
+                  habit.color || "orange",
+                );
+                const textColorClass = getTailwindTextColorClass(
+                  habit.color || "orange",
+                );
+                const shadowClass = getTailwindShadowClass(
+                  habit.color || "orange",
+                );
+                const fadeColorClass = getTailwindFadeColorClass(
+                  habit.color || "orange",
+                );
 
                 return (
                   <div
                     key={habit.id}
-                    className="flex items-center justify-between bg-neutral-50 border border-neutral-200 rounded-2xl overflow-hidden hover:border-neutral-300 transition-colors"
+                    className={`flex items-center justify-between bg-white shadow-md ${shadowClass} border rounded-3xl overflow-hidden`}
                   >
                     <div className="p-3 sm:p-4 grow flex flex-col text-center relative gap-5">
                       <div className="flex items-center justify-center">
@@ -246,14 +326,14 @@ export default function Dashboard() {
                           onClick={() => handleToggleCompletion(habit)}
                           className={`size-16 rounded-full flex items-center justify-center transition-all ${
                             completed
-                              ? "bg-orange-500 shadow-lg shadow-orange-500/20"
+                              ? `${bgColorClass} shadow-lg ${shadowClass}`
                               : "bg-white border-2 border-neutral-200 hover:border-neutral-400"
                           }`}
                         >
                           {completed ? (
-                            <Check className="size-6 text-white" />
+                            <Check className="size-8 text-white" />
                           ) : (
-                            <Circle className="size-6 text-gray-400" />
+                            <Circle className="size-8 text-gray-400" />
                           )}
                         </button>
                       </div>
@@ -262,20 +342,20 @@ export default function Dashboard() {
                         {/* Habit Info */}
                         <div className="max-w-16 flex items-center justify-center flex-col">
                           <h3
-                            className={`text-base sm:text-lg font-medium truncate ${
+                            className={`text-base sm:text-lg truncate ${
                               completed
                                 ? "line-through text-gray-400"
-                                : "text-gray-900"
+                                : `${textColorClass} font-semibold`
                             }`}
                           >
                             {habit.title}
                           </h3>
                           <div className="flex items-center gap-2 mt-1">
                             <div
-                              className={`flex items-center gap-1 truncate text-xs ${completed ? "text-orange-500 font-semibold" : "text-gray-400"}`}
+                              className={`flex items-center gap-1 truncate text-xs ${completed ? `font-semibold ${textColorClass}` : "text-gray-400"}`}
                             >
                               <Flame
-                                className={`w-3 h-3 ${completed ? "fill-orange-500 text-orange-500" : ""}`}
+                                className={`w-3 h-3 ${completed ? "fill-current" : ""}`}
                               />
                               <span>{stats.currentStreak} day streak</span>
                             </div>

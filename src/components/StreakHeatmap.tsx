@@ -8,9 +8,29 @@ interface StreakHeatmapProps {
 }
 
 export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) {
+  const habitColor = habit.color || 'orange';
+
+  const getTailwindColorClass = (color: string) => {
+    const colorMap: Record<string, string> = {
+      orange: 'bg-orange-500',
+      blue: 'bg-blue-500',
+      green: 'bg-green-500',
+      purple: 'bg-purple-500',
+      red: 'bg-red-500',
+      yellow: 'bg-yellow-500',
+      pink: 'bg-pink-500',
+      cyan: 'bg-cyan-500',
+      indigo: 'bg-indigo-500',
+      gray: 'bg-gray-500',
+    };
+    return colorMap[color] || colorMap.orange;
+  };
+
+  const bgColorClass = getTailwindColorClass(habitColor);
+
   const getIntensity = (completed: boolean) => {
     if (!completed) return 'bg-neutral-200 hover:border hover:border-neutral-500';
-    return 'bg-orange-500 hover:border hover:border-neutral-500';
+    return 'hover:border hover:border-neutral-500';
   };
 
   // Generate full 90-day grid going backwards from today
@@ -90,6 +110,7 @@ export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) 
                     key={dayIndex}
                     className={`
                       w-3 h-3 rounded-sm ${getIntensity(isCompleted)}
+                      ${isCompleted ? bgColorClass : ''}
                       ${isToday ? 'ring-1 ring-neutral-600' : ''}
                     `}
                     title={`${day.date.toLocaleDateString()}: ${isCompleted ? 'Completed' : 'Not completed'}`}
@@ -105,7 +126,9 @@ export default function StreakHeatmap({ habit, days = 90 }: StreakHeatmapProps) 
       <div className="flex items-center gap-2 mt-3 text-xs text-neutral-400">
         <span>Less</span>
         <div className="w-3 h-3 rounded-sm bg-neutral-200" />
-        <div className="w-3 h-3 rounded-sm bg-orange-500" />
+        <div 
+          className={`w-3 h-3 rounded-sm ${bgColorClass}`}
+        />
         <span>More</span>
       </div>
     </div>

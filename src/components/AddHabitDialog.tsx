@@ -22,6 +22,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Palette } from 'lucide-react';
 
 const DAYS_OF_WEEK = [
   { value: 0, label: 'Sun' },
@@ -31,6 +32,19 @@ const DAYS_OF_WEEK = [
   { value: 4, label: 'Thu' },
   { value: 5, label: 'Fri' },
   { value: 6, label: 'Sat' },
+];
+
+const COLOR_OPTIONS = [
+  { value: 'orange', class: 'bg-orange-500' },
+  { value: 'blue', class: 'bg-blue-500' },
+  { value: 'green', class: 'bg-green-500' },
+  { value: 'purple', class: 'bg-purple-500' },
+  { value: 'red', class: 'bg-red-500' },
+  { value: 'yellow', class: 'bg-yellow-500' },
+  { value: 'pink', class: 'bg-pink-500' },
+  { value: 'cyan', class: 'bg-cyan-500' },
+  { value: 'indigo', class: 'bg-indigo-500' },
+  { value: 'gray', class: 'bg-gray-500' },
 ];
 
 interface AddHabitDialogProps {
@@ -47,7 +61,7 @@ export default function AddHabitDialog({ open, onOpenChange, onHabitAdded, userI
     frequency: 'daily',
     customDays: [],
     startDate: new Date(),
-    color: 'blue',
+    color: 'orange',
   });
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,7 +80,7 @@ export default function AddHabitDialog({ open, onOpenChange, onHabitAdded, userI
         frequency: 'daily',
         customDays: [],
         startDate: new Date(),
-        color: 'blue',
+        color: 'orange',
       });
     } catch (error) {
       console.error('Error creating habit:', error);
@@ -162,6 +176,25 @@ export default function AddHabitDialog({ open, onOpenChange, onHabitAdded, userI
                 onChange={(e) => setFormData({ ...formData, startDate: new Date(e.target.value) })}
                 required
               />
+            </div>
+
+            <div className="grid gap-2">
+              <Label htmlFor="color">Theme Color</Label>
+              <div className="flex gap-2 flex-wrap">
+                {COLOR_OPTIONS.map((color) => (
+                  <button
+                    key={color.value}
+                    type="button"
+                    onClick={() => setFormData({ ...formData, color: color.value })}
+                    className={`w-8 h-8 rounded-full border-2 transition-all ${
+                      formData.color === color.value 
+                        ? 'border-gray-900 scale-110' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    } ${color.class}`}
+                    title={color.value.charAt(0).toUpperCase() + color.value.slice(1)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
           <DialogFooter className="flex-col sm:flex-row gap-2">

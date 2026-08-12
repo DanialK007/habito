@@ -92,12 +92,18 @@ export const updateLocalHabit = async (id: string, updates: Partial<Habit>): Pro
       id, // Ensure ID is preserved
     };
 
-    // Convert to storage format
+    // Convert to storage format - handle both Date and string types
     const storageHabit = {
       ...updatedHabit,
-      startDate: (updatedHabit.startDate as Date).toISOString(),
-      createdAt: (updatedHabit.createdAt as Date).toISOString(),
-      completedDates: (updatedHabit.completedDates as Date[]).map(d => d.toISOString()),
+      startDate: updatedHabit.startDate instanceof Date 
+        ? updatedHabit.startDate.toISOString() 
+        : updatedHabit.startDate,
+      createdAt: updatedHabit.createdAt instanceof Date 
+        ? updatedHabit.createdAt.toISOString() 
+        : updatedHabit.createdAt,
+      completedDates: (updatedHabit.completedDates as Date[]).map(d => 
+        d instanceof Date ? d.toISOString() : d
+      ),
     };
 
     await localStorageService.saveHabit(storageHabit);
